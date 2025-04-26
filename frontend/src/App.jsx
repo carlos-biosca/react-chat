@@ -5,22 +5,36 @@ import io from "socket.io-client";
 const socket = io("/");
 
 function App() {
-  const [message, setMessage] = useState("");
+  const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
     socket.on("message", msg => {
-      setMessage(msg);
+      console.log(msg);
     });
-
-    return () => {
-      socket.off("message");
-    };
   }, []);
+
+  const handleChangeMessage = e => {
+    setNewMessage(e.target.value);
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    socket.emit("message", newMessage);
+    setNewMessage("");
+  };
 
   return (
     <>
       <h1>Chat React</h1>
-      <p>{message}</p>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Send a message"
+          value={newMessage}
+          onChange={handleChangeMessage}
+        />
+        <button>Send</button>
+      </form>
     </>
   );
 }
