@@ -5,6 +5,10 @@ import io from "socket.io-client";
 const socket = io("/");
 
 function App() {
+  const [username, setUsername] = useState({
+    name: "",
+    joined: false
+  });
   const [newMessage, setNewMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
@@ -22,30 +26,67 @@ function App() {
     setNewMessage(e.target.value);
   };
 
-  const handleSubmit = e => {
+  const handleSubmitMessage = e => {
     e.preventDefault();
-    socket.emit("message", newMessage);
-    setMessageList(messageList => [...messageList, newMessage]);
+    socket.emit("message", {
+      user: username.name,
+      message: newMessage
+    });
+    setMessageList(messageList => [
+      ...messageList,
+      {
+        user: username.name,
+        message: newMessage
+      }
+    ]);
     setNewMessage("");
+  };
+
+  const handleChangeUsername = e => {
+    setUsername(username => ({ ...username, name: e.target.value }));
+  };
+
+  const handleSubmitUsername = e => {
+    e.preventDefault();
+    setUsername(username => ({ ...username, joined: true }));
   };
 
   return (
     <>
       <h1>Chat React</h1>
-      <ul>
-        {messageList.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Send a message"
-          value={newMessage}
-          onChange={handleChangeMessage}
-        />
-        <button>Send</button>
-      </form>
+      {username.joined ? (
+        <>
+          <ul>
+            {messageList.map((msg, index) => (
+              <li key={index}>
+                {msg.user}: {msg.message}
+              </li>
+            ))}
+          </ul>
+          <form onSubmit={handleSubmitMessage}>
+            <input
+              type="text"
+              placeholder="Send a message"
+              value={newMessage}
+              onChange={handleChangeMessage}
+            />
+            <button>Send</button>
+          </form>
+        </>
+      ) : (
+        <>
+          <h2>Welcome to the chat</h2>
+          <form onSubmit={handleSubmitUsername}>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={username.name}
+              onChange={handleChangeUsername}
+            />
+            <button>Join</button>
+          </form>
+        </>
+      )}
     </>
   );
 }
