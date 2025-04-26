@@ -6,11 +6,16 @@ const socket = io("/");
 
 function App() {
   const [newMessage, setNewMessage] = useState("");
+  const [messageList, setMessageList] = useState([]);
 
   useEffect(() => {
     socket.on("message", msg => {
       console.log(msg);
+      setMessageList(messageList => [...messageList, msg]);
     });
+    return () => {
+      socket.off("message");
+    };
   }, []);
 
   const handleChangeMessage = e => {
@@ -20,12 +25,18 @@ function App() {
   const handleSubmit = e => {
     e.preventDefault();
     socket.emit("message", newMessage);
+    setMessageList(messageList => [...messageList, newMessage]);
     setNewMessage("");
   };
 
   return (
     <>
       <h1>Chat React</h1>
+      <ul>
+        {messageList.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
