@@ -20,14 +20,15 @@ const MessageForm = ({ user, socket, setMessageList }) => {
   };
 
   return (
-    <form onSubmit={handleSubmitMessage}>
+    <form onSubmit={handleSubmitMessage} className="form">
       <input
         type="text"
         placeholder="Send a message"
         value={newMessage}
         onChange={handleChangeMessage}
+        className="input"
       />
-      <button>Send</button>
+      <button className="button">Send</button>
     </form>
   );
 };

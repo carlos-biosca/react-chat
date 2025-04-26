@@ -1,9 +1,12 @@
-const MessageList = ({ messageList }) => {
+const MessageList = ({ messageList, user }) => {
   return (
-    <ul>
+    <ul className="list">
       {messageList.map((msg, index) => (
-        <li key={index}>
-          {msg.user}: {msg.message}
+        <li
+          key={index}
+          className={`message ${msg.user === user && "message__user"}`}
+        >
+          <span>{msg.user}</span> <span>{msg.message}</span>
         </li>
       ))}
     </ul>

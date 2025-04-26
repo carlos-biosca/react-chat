@@ -9,14 +9,15 @@ const UserForm = ({ setUsername, username }) => {
   };
 
   return (
-    <form onSubmit={handleSubmitUsername}>
+    <form onSubmit={handleSubmitUsername} className="form">
       <input
         type="text"
         placeholder="Enter your username"
         value={username.name}
         onChange={handleChangeUsername}
+        className="input"
       />
-      <button>Join</button>
+      <button className="button">Join</button>
     </form>
   );
 };

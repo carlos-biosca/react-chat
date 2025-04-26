@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import io from "socket.io-client";
 
 import MessageList from "./components/MessageList";
@@ -17,7 +16,6 @@ function App() {
 
   useEffect(() => {
     socket.on("message", msg => {
-      console.log(msg);
       setMessageList(messageList => [...messageList, msg]);
     });
     return () => {
@@ -26,24 +24,26 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className="App">
       {username.joined ? (
-        <>
-          <h1>Chat React</h1>
-          <MessageList messageList={messageList} />
-          <MessageForm
-            user={username.name}
-            socket={socket}
-            setMessageList={setMessageList}
-          />
-        </>
+        <div className="chat">
+          <div className="chat-header">
+            <h1 className="title">Chat React</h1>
+            <MessageForm
+              user={username.name}
+              socket={socket}
+              setMessageList={setMessageList}
+            />
+          </div>
+          <MessageList messageList={messageList} user={username.name} />
+        </div>
       ) : (
         <>
-          <h1>Welcome to the chat</h1>
+          <h1 className="title">Welcome to the chat</h1>
           <UserForm setUsername={setUsername} username={username} />
         </>
       )}
-    </>
+    </div>
   );
 }
 
