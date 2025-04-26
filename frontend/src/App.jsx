@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import io from "socket.io-client";
 
+import MessageList from "./components/MessageList";
+import MessageForm from "./components/MessageForm";
+import UserForm from "./components/UserForm";
+
 const socket = io("/");
 
 function App() {
+  const [messageList, setMessageList] = useState([]);
   const [username, setUsername] = useState({
     name: "",
     joined: false
   });
-  const [newMessage, setNewMessage] = useState("");
-  const [messageList, setMessageList] = useState([]);
 
   useEffect(() => {
     socket.on("message", msg => {
@@ -22,69 +25,22 @@ function App() {
     };
   }, []);
 
-  const handleChangeMessage = e => {
-    setNewMessage(e.target.value);
-  };
-
-  const handleSubmitMessage = e => {
-    e.preventDefault();
-    socket.emit("message", {
-      user: username.name,
-      message: newMessage
-    });
-    setMessageList(messageList => [
-      ...messageList,
-      {
-        user: username.name,
-        message: newMessage
-      }
-    ]);
-    setNewMessage("");
-  };
-
-  const handleChangeUsername = e => {
-    setUsername(username => ({ ...username, name: e.target.value }));
-  };
-
-  const handleSubmitUsername = e => {
-    e.preventDefault();
-    setUsername(username => ({ ...username, joined: true }));
-  };
-
   return (
     <>
-      <h1>Chat React</h1>
       {username.joined ? (
         <>
-          <ul>
-            {messageList.map((msg, index) => (
-              <li key={index}>
-                {msg.user}: {msg.message}
-              </li>
-            ))}
-          </ul>
-          <form onSubmit={handleSubmitMessage}>
-            <input
-              type="text"
-              placeholder="Send a message"
-              value={newMessage}
-              onChange={handleChangeMessage}
-            />
-            <button>Send</button>
-          </form>
+          <h1>Chat React</h1>
+          <MessageList messageList={messageList} />
+          <MessageForm
+            user={username.name}
+            socket={socket}
+            setMessageList={setMessageList}
+          />
         </>
       ) : (
         <>
-          <h2>Welcome to the chat</h2>
-          <form onSubmit={handleSubmitUsername}>
-            <input
-              type="text"
-              placeholder="Enter your username"
-              value={username.name}
-              onChange={handleChangeUsername}
-            />
-            <button>Join</button>
-          </form>
+          <h1>Welcome to the chat</h1>
+          <UserForm setUsername={setUsername} username={username} />
         </>
       )}
     </>
