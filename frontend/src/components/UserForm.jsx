@@ -1,3 +1,12 @@
+/*
+ * The UserForm component renders a form for the user to enter a username and
+ * join the chat room.
+ *
+ * Props:
+ * - setUsername: a function to update the username state.
+ * - username: the username of the current user.
+ */
+
 const UserForm = ({ setUsername, username }) => {
   const handleChangeUsername = e => {
     setUsername(username => ({ ...username, name: e.target.value }));

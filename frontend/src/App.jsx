@@ -1,3 +1,11 @@
+/*
+ * The App component manages the state and logic for a real-time chat application using Web Sockets.
+ * It maintains the list of messages and the user's username and joined status.
+ * When the user is joined, it renders the chat interface including the MessageForm and MessageList components.
+ * If the user is not joined, it renders the UserForm for entering a username.
+ * The component listens for incoming messages via the socket and updates the message list accordingly.
+ */
+
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
