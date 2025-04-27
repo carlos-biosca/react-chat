@@ -6,7 +6,7 @@ const port = process.env.PORT || 8000;
 const io = require('socket.io')(server);
 
 app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
+  res.send('<h1>Server is running!</h1>');
 });
 
 io.on('connection', (socket) => {
